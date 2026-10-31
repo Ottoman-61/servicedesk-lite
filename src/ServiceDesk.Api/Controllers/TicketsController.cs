@@ -2,10 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServiceDesk.Api.Data;
 using ServiceDesk.Api.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ServiceDesk.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class TicketsController : ControllerBase
 {
@@ -32,34 +35,29 @@ public class TicketsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Ticket>> Create(CreateTicketDto dto)
+    [Authorize(Roles = "admin")]
+    public async Task<ActionResult<Device>> Create(CreateDeviceDto dto)
     {
-        if (string.IsNullOrWhiteSpace(dto.Title)) return  BadRequest("Titel fehlt.");
+        if (string.IsNullOrWhiteSpace(dto.Name) || string.IsNullOrWhiteSpace(dto.Type))
+            return BadRequest("Name und Typ sind Pflicht.");
 
 
-        var priority = dto.Priority ?? "mittel";
-        if (!Priorities.Contains(priority)) return BadRequest("Ungueltige Prioritaet.");
-
-        if(dto.CreatedBy is not null && !await _db.Users.AnyAsync(u => u.Id == dto.CreatedBy))
-            return BadRequest("Ersteller existiert nicht.");
-        
-        if(dto.DeviceId is not null && !await _db.Devices.AnyAsync(d => d.Id == dto.DeviceId))
-            return BadRequest("Geraet existiert nicht.");
-
-        var ticket = new Ticket
+        var device = new Device
         {
-            Title = dto.Title.Trim(),
-            Description = dto.Description,
-            Priority = priority,
-            CreatedBy = dto.CreatedBy,
-            DeviceId = dto.DeviceId,
+            Name =dto.Name.Trim(),
+            Type =dto.Type.Trim(),
+            Hostname =dto.Hostname,
+            IpAddress =dto.IpAddress,
+            Location =dto.Location
         };
-        _db.Tickets.Add(ticket);
+        _db.Devices.Add(device);
         await _db.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetOne), new { id = ticket.Id }, ticket);
+        return CreatedAtAction(nameof(GetAll), new { id = device.Id }, device);
+
     }
 
     [HttpPatch("{id}")]
+    [Authorize(Roles = "techniker,admin")]
     public async Task<ActionResult<Ticket>> Update(int id, UpdateTicketDto dto)
     {
         var ticket = await _db.Tickets.FindAsync(id);
@@ -103,3 +101,4 @@ public class TicketsController : ControllerBase
         return ticket;
     }
 }
+public record CreateDeviceDto(string Name, string Type, string? Hostname, string? IpAddress, string? Location);
