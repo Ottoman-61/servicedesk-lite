@@ -1,0 +1,16 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Start";
+}
+
+<h1>ServiceDesk Lite</h1>
+
+<p>
+    Amgemeldet als <strong>@User.Identity?.Name</strong>
+    (@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value).
+</p>
+
+<form method="post" asp-page="/Logout">
+    <button type="submit" class="btn btn-outline-secondary">Abmelden</button>
+</form>

@@ -29,9 +29,12 @@ public class AuthController : ControllerBase
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == dto.Username);
 
         var ok = user is not null
-            && user.PasswordHash.StartsWith("$2")
-            && BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
-        if (!ok) return Unauthorized("Benutername oder Passwort falsch");
+                 && user.PasswordHash.StartsWith("$2")
+                 && BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
+        if (!ok) return Unauthorized("Benutzername oder Passwort falsch.");
+       
+
+        
 
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:key"]!));

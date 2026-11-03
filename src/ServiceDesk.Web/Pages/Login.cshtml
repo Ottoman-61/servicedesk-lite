@@ -1,0 +1,23 @@
+@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Anmelden";
+}
+
+<h1>Anmelden</h1>
+
+<form method="post" class="col-md-4">
+    <div class="mb-3">
+        <label asp-for="Username" class="form-label">Benutzername</label>
+        <input asp-for="Username" class="form-control" autocomplete="username" required />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label">Passwort</label>
+        <input asp-for="Password" type="password" class="form-control" autocomplete="current-password" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Anmelden</button>
+    @if (Model.Error is not null)
+        {
+            <p class="text-danger mt-3" role="alert">@Model.Error</p>
+        }
+    </form>
