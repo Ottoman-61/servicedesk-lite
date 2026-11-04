@@ -26,9 +26,9 @@ public class LoginModel : PageModel
         {
             result = await _api.LoginAsync(Username.Trim(), Password);
         }
-        catch (HttpRequestException)
+        catch (HttpRequestException ex)
         {
-            Error = "Server nicht erreichbar.";
+            Error = "API nicht erreichbar oder Fehler: " + ex.Message;
             return Page();
         }
 

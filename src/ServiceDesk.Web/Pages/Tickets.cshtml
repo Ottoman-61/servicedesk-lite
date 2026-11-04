@@ -1,0 +1,88 @@
+@page
+@model TicketsModel
+@{
+    ViewData["Title"] = "Tickets";
+}
+
+<h1>Tickets</h1>
+
+@if (Model.Message is not null)
+{
+    <div class="alert aler-success" role="status">@Model.Message</div>
+}
+@if (Model.Error is not null)
+{
+    <div class="alert alert danger" role="alert">@Model.Error</div>
+}
+
+<h2 class="h4 mt-4">Neues Ticket</h2>
+<form method="post" class="col-md-6 mb-4">
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Titel</label>
+        <input asp-for="Title" class="form-control" maxlength="150" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div> 
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Beschreibung</label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Priority" class="form label">Priorität</label>
+        <select asp-for="Description" class="form-select">
+            <option value="niedrig">Niedrig</option>
+            <option value="mittel">Mittel</option>
+            <option value="hoch">Hoch</option>
+            <option value="kritisch">Kritisch</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="DeviceId" class="form-label">Gerät</label>
+        <select asp-for="DeviceId" asp-items="Model.DeviceOptions" class="form-select">
+            <option value="">- keins -</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Ticket anlegen</button>
+</form>
+
+<h2 class="h4">Alle Tickets</h2>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <select name="Status" class="form-select" aria-label="Status filtern">
+            @foreach (var (value, label) in new[] { ("", "Alle"), ("offen", "Offen"), ("in_bearbeitung", "In Bearbeitung"), ("geloest", "Gelöst"), ("geschlossen", "Geschlossen") })
+                {
+                    <option value="@value" selected="@((Model.Status ?? "") == value)">@label</option>
+                }
+            </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-secondary">Filtern</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Nr.</th><th>Titel</th><th>Status</th><th>Priorität</th><th>Gerät</th><th>Quelle</th><th>Erstellt</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model.Tickets)
+            {
+                <tr>
+                    <td>@t.Id</td>
+                    <td>@t.Title</td>
+                    <td>@TicketsModel.StatusLabel(t.Status)</td>
+                    <td class="@TicketsModel.PriorityClass(t.Priority)">@t.Priority</td>
+                    <td>@Model.DeviceName(t.DeviceId)</td>
+                    <td>@(t.Source == "agent" ? "Agent" : "Manuell")</td>
+                    <td>@DateTime.SpecifyKind(t.CreatedAt, DateTimeKind.Utc).ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                </tr>
+            }
+            @if (Model.Tickets.Count == 0)
+            {
+                <tr><td colspan="7">Keine Tickets.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>
