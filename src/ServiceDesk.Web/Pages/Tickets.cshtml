@@ -63,7 +63,7 @@
     <table class="table table-striped align-middle">
         <thead>
             <tr>
-                <th>Nr.</th><th>Titel</th><th>Status</th><th>Priorität</th><th>Gerät</th><th>Quelle</th><th>Erstellt</th>
+                <th>Nr.</th><th>Titel</th><th>Status</th><th>Priorität</th><th>Gerät</th><th>Quelle</th><th>Erstellt</th><th></th>
             </tr>
         </thead>
         <tbody>
@@ -73,15 +73,21 @@
                     <td>@t.Id</td>
                     <td>@t.Title</td>
                     <td>@TicketsModel.StatusLabel(t.Status)</td>
-                    <td class="@TicketsModel.PriorityClass(t.Priority)">@t.Priority</td>
+                    <td class="@TicketsModel.PriorityClass(t.Piority)">@t.Piority</td>
                     <td>@Model.DeviceName(t.DeviceId)</td>
                     <td>@(t.Source == "agent" ? "Agent" : "Manuell")</td>
                     <td>@DateTime.SpecifyKind(t.CreatedAt, DateTimeKind.Utc).ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>
+                        @if (User.IsInRole("techniker") || User.IsInRole("admin"))
+                        {
+                            <a asp-page="/TicketEdit" asp-route-id="@t.Id">Bearbeiten</a>
+                        }
+                    </td>
                 </tr>
             }
             @if (Model.Tickets.Count == 0)
             {
-                <tr><td colspan="7">Keine Tickets.</td></tr>
+                <tr><td colspan="8">Keine Tickets.</td></tr>
             }
         </tbody>
     </table>

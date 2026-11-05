@@ -1,0 +1,76 @@
+@page
+@model DevicesModel
+@{
+    ViewData["Title"] = "Geräte";
+}
+
+<h1>Geräte</h1>
+
+@if (Model.Message is not null)
+{
+    <div class="alert alert-success" role="status">@Model.Message</div>
+}
+@if (Model.Error is not null)
+{
+    <div class="alert alert-danger" role="alert">@Model.Error</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Name</th><th>Typ</th><th>Hostname</th><th>IP-Adresse</th>
+                <th>Standort</th><th>Garantie bis</th><th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var d in Model.Devices)
+            {
+                <tr>
+                    <td>@d.Name</td>
+                    <td>@d.Type</td>
+                    <td>@(d.Hostname ?? "-")</td>
+                    <td>@(d.IpAddress ?? "-")</td>
+                    <td>@(d.Location ?? "-")</td>
+                    <td>@(d.WarrantyUntill?.ToString("dd.MM.yyyy") ?? "-")</td>
+                    <td>@d.Status</td>
+                </tr>
+            }
+            @if (Model.Devices.Count == 0)
+            {
+                <tr><td colspan="7">Keine Geräte.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (User.IsInRole("admin"))
+{
+    <h2 class="h4 mt-4">Neues Gerät</h2>
+    <form method="post" class="col-md-6">
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Name</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Type" class="form-label">Typ</label>
+            <input asp-for="Type" class="form-control" placeholder="z. B. Server, Laptop, Drucker" />
+            <span asp-validation-for="Type" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Hostname" class="form-label">Hostname</label>
+            <input asp-for="Hostname" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="IpAddress" class="form-label">IP-Adresse</label>
+            <input asp-for="IpAddress" class="form-control" />
+            <span asp-validation-for="IpAddress" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Location" class="form-label">Standort</label>
+            <input asp-for="Location" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Gerät anlegen</button>
+    </form>
+}

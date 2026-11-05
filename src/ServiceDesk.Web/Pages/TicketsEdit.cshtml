@@ -1,0 +1,66 @@
+@page "{id:int}"
+@model TicketEditModel
+@{
+    ViewData["Title"] = "Ticket bearbeiten";
+}
+
+<h1>Ticket bearbeiten</h1>
+
+@if (Model.Message is not null)
+{
+    <div class="alert alert-success" role="status">@Model.Message</div>
+}
+@if (Model.Error is not null)
+{
+    <div class="alert alert-danger" role="alert">@Model.Error</div>
+}
+
+@if (Model.Ticket is not null)
+{
+    <dl class="row">
+        <dt class="col-sm-3">Nr.</dt><dd class="col-sm-9">@Model.Ticket.Id</dd>
+        <dt class="col-sm-3">Titel</dt><dd class="col-sm-9">@Model.Ticket.Title</dd>
+        <dt class="col-sm-3">Beschreibung</dt><dd class="col-sm-9">@(Model.Ticket.Description ?? "-")</dd>
+        <dt class="col-sm-3">Quelle</dt><dd class="col-sm-9">@(Model.Ticket.Source == "agent" ? "Agent" : "Manuell")</dd>
+        <dt class="col-sm-3">Erstellt</dt>
+        <dd class="col-sm-9">@DateTime.SpecifyKind(Model.Ticket.CreatedAt, DateTimeKind.Utc).ToLocalTime().ToString("dd.MM.yyyy HH:mm")</dd>
+    </dl>
+
+    <form method="post" class="col-md-6">
+        <div class="mb-3">
+            <label asp-for="Status" class="form-label">Status</label>
+            <select asp-for="Status" class="form-select">
+                <option value="offen">Offen</option>
+                <option value="in_bearbeitung">In Bearbeitung</option>
+                <option value="geloest">Gelöst</option>
+                <option value="geschlossen">Geschlossen</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Priority" class="form-label">Priorität</label>
+            <select asp-for="Priority" class="form-select">
+                <option value="niedrig">Niedrig</option>
+                <option value="mittel">Mittel</option>
+                <option value="hoch">Hoch</option>
+                <option value="kritisch">Kritisch</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="AssignedTo" class="form-label">Bearbeiter</label>
+            <select asp-for="AssignedTo" asp-items="Model.UserOptions" class="form-select">
+                <option value="">- niemand -</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="SolutionNote" class="form-label">Lösungsvermerk</label>
+            <textarea asp-for="SolutionNote" class="form-control" rows="4"></textarea>
+            <div class="form-text">Pflicht, sobald das Ticket auf „Gelöst“ oder „Geschlossen“ gesetzt wird.</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <a asp-page="/Tickets" class="btn btn-outline-secondary">Zurück</a>
+    </form>
+}
+else if (Model.Error is null)
+{
+    <p>Ticket nicht gefunden.</p>
+}
