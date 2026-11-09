@@ -13,5 +13,5 @@ public class Device
     [Column("location")] public string? Location { get; set; }
     [Column("owner_id")] public int? OwnerId { get; set; }
     [Column("warranty_until")] public DateOnly? WarrantyUntil { get; set; }
-    [Column("status")] public string Status { get; set; } ="";
+    [Column("status")] public string Status { get; set; } ="aktiv";
 }

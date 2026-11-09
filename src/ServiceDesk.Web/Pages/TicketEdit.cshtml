@@ -48,12 +48,20 @@
         <div class="mb-3">
             <label asp-for="AssignedTo" class="form-label">Bearbeiter</label>
             <select asp-for="AssignedTo" asp-items="Model.UserOptions" class="form-select">
-                <option value="">- niemand -</option>
+                <option value="">- techniker1 -</option>
+                <option value="">- tunahan -</option>
             </select>
         </div>
         <div class="mb-3">
             <label asp-for="SolutionNote" class="form-label">Lösungsvermerk</label>
             <textarea asp-for="SolutionNote" class="form-control" rows="4"></textarea>
+           @if (!string.IsNullOrEmpty(Model.Error))
+                {
+                    <div class="alert alert-danger" role="alert">
+                    @Model.Error
+                    </div>
+                }
+
             <div class="form-text">Pflicht, sobald das Ticket auf „Gelöst“ oder „Geschlossen“ gesetzt wird.</div>
         </div>
         <button type="submit" class="btn btn-primary">Speichern</button>

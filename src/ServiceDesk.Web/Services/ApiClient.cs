@@ -72,16 +72,20 @@ public class ApiClient
     public Task<string?> CreateDeviceAsync(string token, CreateDeviceRequest device)
         => WriteAsync(HttpMethod.Post, "devices", token, device);
 
-    private async Task<string?> WriteAsync<T>(HttpMethod method, string url, string token, T body)
+        private async Task<string?> WriteAsync<T>(HttpMethod method, string url, string token, T body)
     {
         using var request = NewRequest(method, url, token);
         request.Content = JsonContent.Create(body, options: Json);
 
         var response = await _http.SendAsync(request);
         if (response.StatusCode == HttpStatusCode.Unauthorized) throw new ApiUnauthorizedException();
-        if (response.StatusCode == HttpStatusCode.Forbidden) return "Dafür fehlt die nötrige Rolle.";
+        if (response.StatusCode == HttpStatusCode.Forbidden) return "Dafür fehlt die nötige Rolle.";
         if (response.IsSuccessStatusCode) return null;
-        return await response.Content.ReadAsStringAsync();
+
+        var text = await response.Content.ReadAsStringAsync();
+        return string.IsNullOrWhiteSpace(text)
+            ? $"API-Antwort {(int)response.StatusCode} {response.ReasonPhrase}"
+            : text;
     }
 
     private async Task<HttpResponseMessage> SendAsync(HttpMethod method, string url, string token)

@@ -18,3 +18,4 @@ public class Ticket
     [Column("created_at")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     [Column("resolved_at")] public DateTime? ResolvedAt { get; set; }
 }
+

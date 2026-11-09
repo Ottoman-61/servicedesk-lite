@@ -34,26 +34,31 @@ public class TicketsController : ControllerBase
         return ticket is null ? NotFound() : ticket;
     }
 
-    [HttpPost]
-    [Authorize(Roles = "admin")]
-    public async Task<ActionResult<Device>> Create(CreateDeviceDto dto)
+        [HttpPost]
+    public async Task<ActionResult<Ticket>> Create(CreateTicketDto dto)
     {
-        if (string.IsNullOrWhiteSpace(dto.Name) || string.IsNullOrWhiteSpace(dto.Type))
-            return BadRequest("Name und Typ sind Pflicht.");
+        if (string.IsNullOrWhiteSpace(dto.Title)) return BadRequest("Titel fehlt.");
 
+        var priority = dto.Priority ?? "mittel";
+        if (!Priorities.Contains(priority)) return BadRequest("Ungueltige Prioritaet.");
 
-        var device = new Device
+        if (dto.DeviceId is not null && !await _db.Devices.AnyAsync(d => d.Id == dto.DeviceId))
+            return BadRequest("Geraet existiert nicht.");
+
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        var ticket = new Ticket
         {
-            Name =dto.Name.Trim(),
-            Type =dto.Type.Trim(),
-            Hostname =dto.Hostname,
-            IpAddress =dto.IpAddress,
-            Location =dto.Location
+            Title = dto.Title.Trim(),
+            Description = dto.Description,
+            Priority = priority,
+            CreatedBy = userId,
+            DeviceId = dto.DeviceId
         };
-        _db.Devices.Add(device);
-        await _db.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetAll), new { id = device.Id }, device);
 
+        _db.Tickets.Add(ticket);
+        await _db.SaveChangesAsync();
+        return CreatedAtAction(nameof(GetOne), new { id = ticket.Id }, ticket);
     }
 
     [HttpPatch("{id}")]
@@ -101,4 +106,3 @@ public class TicketsController : ControllerBase
         return ticket;
     }
 }
-public record CreateDeviceDto(string Name, string Type, string? Hostname, string? IpAddress, string? Location);

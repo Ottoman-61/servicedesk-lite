@@ -57,6 +57,14 @@ public class TicketEditModel : PageModel
     {
         try
         {
+            bool isttechniker = User.IsInRole("techniker");
+            bool istAbgeschlossen = Status == "geloest" || Status == "geschlossen";
+
+            if (isttechniker && istAbgeschlossen && string.IsNullOrWhiteSpace(SolutionNote))
+            {
+                Error = "Lösungsvermerk fehlt !";
+                return Page();
+            }
             var error = await _api.UpdateTicketAsync(
                 Token, Id, new UpdateTicketRequest(Status, Priority, AssignedTo, SolutionNote));
             if (error is null)
@@ -66,7 +74,6 @@ public class TicketEditModel : PageModel
             }
 
             Error = error;
-            if (!await LoadAsync()) return NotFound();
             return Page();
         }
         catch (ApiUnauthorizedException)

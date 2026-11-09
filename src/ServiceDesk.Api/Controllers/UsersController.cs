@@ -8,13 +8,13 @@ namespace ServiceDesk.Api.Controllers;
 public record UserSummary(int Id, string Username, string Role);
 
 [ApiController]
-[Authorize(Roles = "techniker aadmin")]
+[Authorize(Roles = "techniker, admin")]
 [Route("controller")]
-public class UserController : ControllerBase
+public class UsersController : ControllerBase
 {
     private readonly ServiceDeskContext _db;
 
-    public UserController(ServiceDeskContext db) => _db = db;
+    public UsersController(ServiceDeskContext db) => _db = db;
 
     [HttpGet]
     public async   Task<ActionResult<List<UserSummary>>> GetAll()
