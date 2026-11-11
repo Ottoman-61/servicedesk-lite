@@ -20,7 +20,7 @@
     <dl class="row">
         <dt class="col-sm-3">Nr.</dt><dd class="col-sm-9">@Model.Ticket.Id</dd>
         <dt class="col-sm-3">Titel</dt><dd class="col-sm-9">@Model.Ticket.Title</dd>
-        <dt class="col-sm-3">Beschreibung</dt><dd class="col-sm-9">@(Model.Ticket.Description ?? "-")</dd>
+        <dt class="col-sm-3">Beschreibung</dt><dd class="col-sm-9">@(Model.Ticket.Description ?? "–")</dd>
         <dt class="col-sm-3">Quelle</dt><dd class="col-sm-9">@(Model.Ticket.Source == "agent" ? "Agent" : "Manuell")</dd>
         <dt class="col-sm-3">Erstellt</dt>
         <dd class="col-sm-9">@DateTime.SpecifyKind(Model.Ticket.CreatedAt, DateTimeKind.Utc).ToLocalTime().ToString("dd.MM.yyyy HH:mm")</dd>
@@ -48,20 +48,12 @@
         <div class="mb-3">
             <label asp-for="AssignedTo" class="form-label">Bearbeiter</label>
             <select asp-for="AssignedTo" asp-items="Model.UserOptions" class="form-select">
-                <option value="">- techniker1 -</option>
-                <option value="">- tunahan -</option>
+                <option value="">– niemand –</option>
             </select>
         </div>
         <div class="mb-3">
             <label asp-for="SolutionNote" class="form-label">Lösungsvermerk</label>
             <textarea asp-for="SolutionNote" class="form-control" rows="4"></textarea>
-           @if (!string.IsNullOrEmpty(Model.Error))
-                {
-                    <div class="alert alert-danger" role="alert">
-                    @Model.Error
-                    </div>
-                }
-
             <div class="form-text">Pflicht, sobald das Ticket auf „Gelöst“ oder „Geschlossen“ gesetzt wird.</div>
         </div>
         <button type="submit" class="btn btn-primary">Speichern</button>

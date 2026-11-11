@@ -9,7 +9,7 @@ public record UserSummary(int Id, string Username, string Role);
 
 [ApiController]
 [Authorize(Roles = "techniker, admin")]
-[Route("controller")]
+[Route("users")]
 public class UsersController : ControllerBase
 {
     private readonly ServiceDeskContext _db;
