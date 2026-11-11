@@ -14,6 +14,9 @@ public record CreateTicketRequest(string Title, string? Description, string Pior
 public record UpdateTicketRequest(string? Status, string? Piority, int? AssignedTo, string? SolutionNote);
 public record CreateDeviceRequest(string Name, string Type, string? Hostname, string? IpAddress, string? Location);
 
+public record  DeviceStatusDto(int DeviceId, string Name, string Type, string Status, decimal? CpuPercent, decimal? RamPercent, decimal? DiskPercent, bool? IsReachable, DateTime? MeasuredAt);
+public record DashboardDto(int OpenTickets, int InProgressTickets, int CriticalOpenTickets, int AgentTickets, int ResolvedLast7Days, List<DeviceStatusDto> Devices);
+
 public class ApiUnauthorizedException : Exception { }
 
 public class ApiClient
@@ -60,6 +63,12 @@ public class ApiClient
         if (response.StatusCode == HttpStatusCode.NotFound) return null;
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<TicketDto>(Json);
+    }
+
+    public async Task<DashboardDto?> GetDashboardAsync(string token)
+    {
+        var response = await SendAsync(HttpMethod.Get, "dashboard", token);
+        return await response.Content.ReadFromJsonAsync<DashboardDto>(Json);
     }
 
     // Bei diesen 3 Methoden bekommt man ei null wert wenn man Erfolg hat ansonsten Fehlermeldung von Api,

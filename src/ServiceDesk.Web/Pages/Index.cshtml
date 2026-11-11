@@ -1,15 +1,94 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Start";
+    ViewData["Title"] = "Dashboard";
 }
 
-<h1>ServiceDesk Lite</h1>
-
+<h1>Dashboard</h1>
 <p>
     Angemeldet als <strong>@User.Identity?.Name</strong>
-    (@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value).
+    (@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value)
 </p>
+
+@if (Model.Error is not null)
+{
+    <div class="alert alert-danger" role="alert">@Model.Error</div>
+}
+
+@if (Model.Dashboard is { } d)
+{
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="display-6">@d.OpenTickets</div>
+                    <a asp-page="/Tickets" asp-route-status="offen" class="stretched-link text-decoration-none text-reset">Offene Tickets</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="display-6">@d.InProgressTickets</div>
+                    <a asp-page="/Tickets" asp-route-status="in_bearbeitung" class="stretched-link text-decoration-none text-reset">In Bearbeitung</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md">
+            <div class="card text-center h-100 @(d.CriticalOpenTickets > 0 ? "border-danger" : "")">
+                <div class="card-body">
+                    <div class="display-6">@d.CriticalOpenTickets</div>
+                    <div>Kritisch (offen)</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="display-6">@d.AgentTickets</div>
+                    <div>Vom Agent gemeldet</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="display-6">@d.ResolvedLast7Days</div>
+                    <div>Gelöst (7 Tage)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="h4">Geräte</h2>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Gerät</th><th>Typ</th><th>CPU</th><th>RAM</th>
+                    <th>Festplatte</th><th>Erreichbar</th><th>Zuletzt gemeldet</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dev in d.Devices)
+                {
+                    <tr class="@(IndexModel.IsStale(dev.MeasuredAt) ? "text-muted" : "")">
+                        <td>@dev.Name</td>
+                        <td>@dev.Type</td>
+                        <td class="@IndexModel.LoadClass(dev.CpuPercent)">@IndexModel.Pct(dev.CpuPercent)</td>
+                        <td class="@IndexModel.LoadClass(dev.RamPercent)">@IndexModel.Pct(dev.RamPercent)</td>
+                        <td class="@IndexModel.LoadClass(dev.DiskPercent)">@IndexModel.Pct(dev.DiskPercent)</td>
+                        <td class="@(dev.IsReachable == false ? "text-danger fw-bold" : "")">
+                            @(dev.IsReachable switch { true => "Ja", false => "Nein", null => "–" })
+                        </td>
+                        <td>@IndexModel.Seen(dev.MeasuredAt)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <p class="text-muted small">Orange ab 75 %, rot ab 90 %. Grau: älter als 10 Minuten.</p>
+}
 
 <form method="post" asp-page="/Logout">
     <button type="submit" class="btn btn-outline-secondary">Abmelden</button>
