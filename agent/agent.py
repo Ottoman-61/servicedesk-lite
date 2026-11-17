@@ -9,6 +9,7 @@ API_URL = os.environ.get("SD_API_URL", "http://localhost:5071")
 API_KEY = os.environ["SD_API_KEY"]
 DEVICE_ID = int(os.environ.get("SD_DEVICE_ID", "2"))
 INTERVAL = int(os.environ.get("SD_INTERVAL", "30"))
+VERIFY = os.environ.get("SD_CA_CERT") or True
 
 
 def collect():
@@ -30,6 +31,7 @@ def send(measurement):
         json=measurement,
         headers={"X-Api-Key": API_KEY},
         timeout=10,
+        verify=VERIFY,
     )
     response.raise_for_status()
     return response.json()
