@@ -4,7 +4,7 @@ Kleine IT-Betriebsplattform: Tickets, Geräteinventar und ein Monitoring-Agent,
 der Probleme automatisch als Tickets meldet. Abschlussprojekt über alle
 Teilqualifikationen (TQ1 bis TQ6).
 
-##Funktionen
+## Funktionen
 - Tickets anlegen, filtern und bearbeiten (Status, Priorität, Berarbeiter, Lösungsvermerk)
 - Rollen: Nutzer, Techniker, Admin
 - Geräteinventar und Dashboard mit Messwerten
