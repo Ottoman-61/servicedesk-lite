@@ -54,6 +54,7 @@ die ich über OpenAPI-Liste gefunden habe, und bei Rechtefehlern und Namensfehle
 Außerdem habe ich gelernt, Passwörter und Schlüssel aus dem Code herauszuhalten und Dokumentation wie Datenmodell 
 und Architektur als Text durch Mermaid im Repository zu pflegen. 
 
-Tag1 bis Tag3: Server, Netzwerk, Datenbank
-Tag4 bis Tag11: API, Login, Rollen, Agent, Weboberfläche, Dashboard
-Tag12 bis Tag14: Deployment, HTTPS, Backup
+## Ablauf
+- Tag1 bis Tag3: Server, Netzwerk, Datenbank
+- Tag4 bis Tag11: API, Login, Rollen, Agent, Weboberfläche, Dashboard
+- Tag12 bis Tag14: Deployment, HTTPS, Backup
