@@ -1,8 +1,11 @@
 ﻿# SercviceDesk Lite
 
-Kleine IT-Betriebsplattform: Tickets, Geräteinventar und ein Monitoring-Agent,
-der Probleme automatisch als Tickets meldet. Abschlussprojekt über alle
-Teilqualifikationen (TQ1 bis TQ6).
+ServiceDesk Lite ist eine kleine IT-Betriebsplattform, die ich als Abschlussprojekt meiner Umschulung
+zum Anwendungsentwickler gebaut habe: ein Ticketsystem mit Rollen, ein Geräteinventar und ein Python-Agent,
+der Messwerte meldet und bei Problemen automatisch Tickets anlegt. Sie läuft auf einem selbst eingerichteten
+Ubuntu Server mit Nginx und HTTPS, MySQL und systemd-Diensten, mit Firewall, Schlüssel-Login, nächtlichem 
+Backup und getesteter Wiederherstellung. Code (ASP.NET Core, Entity Framework, Razor Pages, Python) und
+Dokumentationen liegen im GitHub-Repository.
 
 ## Funktionen
 - Tickets anlegen, filtern und bearbeiten (Status, Priorität, Berarbeiter, Lösungsvermerk)
@@ -48,7 +51,7 @@ Mit diesem Projekt habe ich zum ersten Mal alle Teilqualifikationen zu einem dur
 Server und Netzwerk in VirtualBox, abgesicherte Dienste mit Nginx und HTTPS, eine MySQL-Datenbank, eine ASP.NET-Core-API
 mit Entity Framework, eine Razer-Pages-Oberfläche und ein Python-Agent. Im Unterricht habe ich mit SQLite, MySQL und mit einzelnen 
 Anwendungen gearbeitet, hier habe ich eine echte Datenbank mit eigenen Benutzer, Beziehungen und Backup
-eingesetzt udn die Wiederherstellung getestet. Am meisten habe ich beim Eingrenzen von Fehlern gelernt,
+eingesetzt und die Wiederherstellung getestet. Am meisten habe ich beim Eingrenzen von Fehlern gelernt,
 zum Beispiel bei einem Versionskonflikt zwischen Pomelo und EF-Core, bei einer falschen Route,
 die ich über OpenAPI-Liste gefunden habe, und bei Rechtefehlern und Namensfehlern  in systemd und den Umgebungsvariablen.
 Außerdem habe ich gelernt, Passwörter und Schlüssel aus dem Code herauszuhalten und Dokumentation wie Datenmodell 
