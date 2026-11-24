@@ -9,9 +9,9 @@ namespace ServiceDesk.Web.Services;
 public record LoginResult(string Token, string Role);
 public record UserDto(int Id, string Username, string Role);
 public record DeviceDto(int Id, string Name, string Type, string? Hostname, string IpAddress,  string? Location, DateOnly? WarrantyUntill, string Status);
-public record TicketDto(int Id, string Title, string? Description, string Status, string Piority, int? CreatedBy, int? AssignedTo, int? DeviceId, string Source, string? SolutionNote, DateTime CreatedAt, DateTime? ResolvedAt);
-public record CreateTicketRequest(string Title, string? Description, string Piority, int? DeviceId);
-public record UpdateTicketRequest(string? Status, string? Piority, int? AssignedTo, string? SolutionNote);
+public record TicketDto(int Id, string Title, string? Description, string Status, string Priority, int? CreatedBy, int? AssignedTo, int? DeviceId, string Source, string? SolutionNote, DateTime CreatedAt, DateTime? ResolvedAt);
+public record CreateTicketRequest(string Title, string? Description, string Priority, int? DeviceId);
+public record UpdateTicketRequest(string? Status, string? Priority, int? AssignedTo, string? SolutionNote);
 public record CreateDeviceRequest(string Name, string Type, string? Hostname, string? IpAddress, string? Location);
 
 public record  DeviceStatusDto(int DeviceId, string Name, string Type, string Status, decimal? CpuPercent, decimal? RamPercent, decimal? DiskPercent, bool? IsReachable, DateTime? MeasuredAt);

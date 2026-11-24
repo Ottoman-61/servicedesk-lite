@@ -37,7 +37,7 @@ public class TicketEditModel : PageModel
         {
             if (!await LoadAsync()) return NotFound();
             Status = Ticket!.Status;
-            Priority = Ticket.Piority;
+            Priority = Ticket.Priority;
             AssignedTo = Ticket.AssignedTo;
             SolutionNote = Ticket.SolutionNote;
             return Page();

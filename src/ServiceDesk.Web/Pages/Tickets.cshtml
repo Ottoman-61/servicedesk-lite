@@ -17,18 +17,19 @@
 
 <h2 class="h4 mt-4">Neues Ticket</h2>
 <form method="post" class="col-md-6 mb-4">
+     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="mb-3">
         <label asp-for="Title" class="form-label">Titel</label>
         <input asp-for="Title" class="form-control" maxlength="150" />
         <span asp-validation-for="Title" class="text-danger"></span>
-    </div> 
+    </div>
     <div class="mb-3">
         <label asp-for="Description" class="form-label">Beschreibung</label>
         <textarea asp-for="Description" class="form-control" rows="3"></textarea>
     </div>
     <div class="mb-3">
-        <label asp-for="Priority" class="form label">Priorität</label>
-        <select asp-for="Description" class="form-select">
+        <label asp-for="Priority" class="form-label">Priorität</label>
+        <select asp-for="Priority" class="form-select">
             <option value="niedrig">Niedrig</option>
             <option value="mittel">Mittel</option>
             <option value="hoch">Hoch</option>
@@ -73,7 +74,7 @@
                     <td>@t.Id</td>
                     <td>@t.Title</td>
                     <td>@TicketsModel.StatusLabel(t.Status)</td>
-                    <td class="@TicketsModel.PriorityClass(t.Piority)">@t.Piority</td>
+                    <td class="@TicketsModel.PriorityClass(t.Priority)">@t.Priority</td>
                     <td>@Model.DeviceName(t.DeviceId)</td>
                     <td>@(t.Source == "agent" ? "Agent" : "Manuell")</td>
                     <td>@DateTime.SpecifyKind(t.CreatedAt, DateTimeKind.Utc).ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
